@@ -49,7 +49,6 @@ def home():
     if not session.get("user"):
         return redirect(url_for('login'))
     return render_template('index.html')
-
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -187,7 +186,46 @@ def alerts():
 
     data = load_alerts()
     return render_template("alerts.html", alerts=data)
+    
+@app.route('/file_case')
+def file_case():
+    return render_template('file_case.html')
 
+@app.route('/food_store')
+def food_store():
+    return render_template('food_store.html')
+
+@app.route('/jobs')
+def jobs():
+    return render_template('jobs.html')
+
+@app.route('/healthcare')
+def healthcare():
+    return render_template('healthcare.html')
+
+@app.route('/eduvid')
+def eduvid():
+    return render_template('eduvid.html')
+# ------------------------------------Profile --------------------------------------------
+@app.route('/profile')
+def profile():
+    if not session.get("user"):
+        return redirect(url_for("login"))
+
+    users = load_users()
+    username = session.get("user")
+
+    user_data = users.get(username, {})
+
+    return render_template("profile.html", user=user_data)
+    # Load users.json
+    import json
+    with open("users.json") as f:
+        users = json.load(f)
+
+    user_data = users.get(username, {})
+
+    return render_template("profile.html", user=user_data)
 # ------------------ SCHEME EXPLORER ------------------
 @app.route('/explore', methods=['GET', 'POST'])
 def explore():
@@ -229,6 +267,7 @@ def explore():
             eligible.append(scheme)
 
     return render_template('explore.html', eligible=eligible)
+
 
 # ------------------ RUN SERVER ------------------
 if __name__ == '__main__':

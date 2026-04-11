@@ -1,8 +1,28 @@
 {
   "Priyanshu_2025": {
-    "password": "p"
-  },
-  "Prince kumar": {
-    "password": "premisingh789"
+    "password": "pr",
+    "name": "Priyanshu",
+    "blood_group": "O+",
+    "health_status": "Good",
+
+    "family": {
+      "name": "Priyanshu",
+      "children": [
+        {
+          "name": "Father",
+          "status": "Good",
+          "children": [
+            {
+              "name": "Grandfather",
+              "status": "Very Good"
+            }
+          ]
+        },
+        {
+          "name": "Mother",
+          "status": "Good"
+        }
+      ]
+    }
   }
 }

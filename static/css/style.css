@@ -73,25 +73,8 @@ header {
     width: 100%
 }
 
-nav {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-}
-nav ul {
-    position:relative;
-    top: -30px;
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
-nav ul li {
-    margin: 0;
-    white-space: nowrap;
-}
+
+
 
 .btn.dark {
     display: flex;
@@ -398,4 +381,46 @@ p { font-size: 16px; line-height: 1.6;
   height: auto;
   border-radius: 50%;
   box-shadow: 0 0 25px rgba(255,255,255,0.5);
+}
+
+
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+/* BOTH ROWS SAME STYLE */
+.nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* COMMON BUTTON STYLE */
+.nav-row a {
+    background: #7b61ff;
+    color: white;
+    padding: 8px 14px;   /* smaller = cleaner */
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+
+    /* IMPORTANT: prevent stretching */
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Hover effect (nice UX) */
+.nav-row a:hover {
+    background: #5a43d6;
+}
+
+/* Special button */
+.nav-row .dark {
+    background: black;
 }
