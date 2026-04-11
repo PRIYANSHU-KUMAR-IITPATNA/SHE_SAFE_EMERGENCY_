@@ -1,0 +1,15 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Frontend Intern",
+      "company": "ABC Pvt Ltd",
+      "location": "Remote",
+      "salary": "₹10,000/month",
+      "category": "Tech",
+      "apply_link": "https://forms.gle/test",
+      "last_date": "2026-05-01",
+      "verified": true
+    }
+  ]
+}

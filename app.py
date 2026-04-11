@@ -30,6 +30,19 @@ def save_users(users):
     with open('users.json', 'w') as file:
         json.dump(users, file, indent=4)
 
+# ---------------- JOB DATABASE ----------------
+
+def load_jobs():
+    if not os.path.exists("jobs.json"):
+        return {"jobs": []}
+    
+    with open("jobs.json", "r") as f:
+        return json.load(f)
+
+
+def save_jobs(data):
+    with open("jobs.json", "w") as f:
+        json.dump(data, f, indent=4)
 # ------------------ ALERT DATABASE ------------------
 def load_alerts():
     try:
@@ -129,6 +142,45 @@ def terms():
 def buddy():
     return render_template('buddy.html')
 
+from datetime import datetime, timedelta
+
+@app.route('/jobs')
+def jobs():
+    jobs = load_jobs()
+
+    applied = False
+
+    if 'applied_date' in session:
+        applied_date = datetime.strptime(session['applied_date'], "%Y-%m-%d")
+        if datetime.now() - applied_date < timedelta(days=30):
+            applied = True
+        else:
+            session.pop('applied_date')  # reset after 30 days
+
+    return render_template('jobs.html', jobs=jobs, applied=applied)
+
+@app.route('/apply/<int:job_id>')
+def apply(job_id):
+    jobs = load_jobs()
+
+    selected_job = None
+    for job in jobs['jobs']:
+        if job['id'] == job_id:
+            selected_job = job
+            break
+
+    if not selected_job:
+        return "Job not found"
+
+    session['applied_date'] = datetime.now().strftime("%Y-%m-%d")
+    session['applied_success'] = True
+
+    return redirect(selected_job['apply_link'])
+
+@app.route('/test_jobs')
+def test_jobs():
+    data = load_jobs()
+    return data
 # ------------------ TWILIO SOS ------------------
 @app.route('/twilio', methods=['GET', 'POST'])
 def twilio_page():
@@ -195,9 +247,6 @@ def file_case():
 def food_store():
     return render_template('food_store.html')
 
-@app.route('/jobs')
-def jobs():
-    return render_template('jobs.html')
 
 @app.route('/healthcare')
 def healthcare():
