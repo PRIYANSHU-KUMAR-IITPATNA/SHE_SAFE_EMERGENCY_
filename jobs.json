@@ -49,6 +49,19 @@
             "video_link": "https://youtube.com/shorts/YYRRI63VZnE?si=85TGI7CelvF1emEo",
             "video_id": "YYRRI63VZnE",
             "verified": true
+        },
+        {
+            "id": 5,
+            "title": "Intern ",
+            "company": "AUTO ROVER",
+            "location": "IIT PATNA",
+            "salary": "1000",
+            "category": "hardware dev ",
+            "apply_link": "https://docs.google.com/forms/d/e/1FAIpQLSdfn5Ur0hRJciA24C4ZiXsYPhAoVCT2RWeuXfvBTmbFagle5g/viewform?pli=1",
+            "last_date": "2026-05-01",
+            "video_link": "https://youtube.com/shorts/qepE3VoBlRc?si=syB0NsDPlq7sW7M_",
+            "video_id": "qepE3VoBlRc",
+            "verified": true
         }
     ]
 }

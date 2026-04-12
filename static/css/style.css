@@ -25,6 +25,11 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Poppins",sans-serif;
+    background: linear-gradient(180deg ,rgb(199, 174, 249) 0% , #D9C8FB 100%);
+}
+html {
+    min-height: 100%;
+    background: linear-gradient(180deg ,rgb(199, 174, 249) 0% , #D9C8FB 100%);
 }
 
 .wrapper {
@@ -77,12 +82,8 @@ header {
 
 
 .btn.dark {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
+    display: inline-block;
     white-space: nowrap;
-    margin: 20px;
 }
 
 
@@ -103,8 +104,8 @@ header {
 .hero-image {
     max-height: 80vh;
     position: relative;
-    top: -295px;
-    width:auto;
+    top: -220px;
+    width: auto;
     display: block;
     margin: 0 auto;
 }
@@ -390,6 +391,7 @@ nav {
     align-items: center;
     gap: 12px;
     width: 100%;
+    margin-top: 1cm;
 }
 
 /* BOTH ROWS SAME STYLE */
@@ -404,10 +406,10 @@ nav {
 .nav-row a {
     background: #7b61ff;
     color: white;
-    padding: 8px 14px;   /* smaller = cleaner */
-    border-radius: 8px;
+    padding: 14px 22px;
+    border-radius: 10px;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
 
     /* IMPORTANT: prevent stretching */
@@ -424,6 +426,8 @@ nav {
 .nav-row .dark {
     background: black;
 }
+
+/* Remove top-row size override so both rows use the same button sizing */
 /* JOB CARD MOBILE RESPONSIVE */
 @media (max-width: 768px) {
     .job-card {
