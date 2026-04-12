@@ -36,6 +36,46 @@
             transform: translateY(-5px);
         }
 
+        .job-card-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .job-video {
+            flex: 1 1 320px;
+            min-width: 280px;
+        }
+
+        .video-thumb {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .video-thumb img {
+            width: 100%;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .video-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: white;
+            text-shadow: 0 0 12px rgba(0,0,0,0.6);
+        }
+
+        .job-info {
+            flex: 1 1 320px;
+            min-width: 260px;
+        }
+
         .job-title {
             font-size: 20px;
             font-weight: bold;
@@ -90,37 +130,51 @@
 <body>
 
 <h1>🚀 Internship & Jobs</h1>
-
+{% if success %}
+    <div style="
+        background: #d4edda;
+        padding: 15px;
+        border-radius: 10px;
+        color: #155724;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    ">
+        ✅ Application submitted successfully!
+    </div>
+{% endif %}
 <div class="jobs-container">
 
     {% for job in jobs.jobs %}
-    <div class="job-card">
+        <div class="job-card">
+            <div class="job-card-row">
+                <div class="job-video">
+                    {% if job.video_id %}
+                        <a href="{{ job.video_link }}" target="_blank" style="text-decoration:none; display:block;">
+                            <div class="video-thumb">
+                                <img src="https://img.youtube.com/vi/{{ job.video_id }}/0.jpg" alt="{{ job.title }} video">
+                                <div class="video-play">▶</div>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
 
-        <div class="job-title">{{ job.title }}</div>
-        <div class="company">{{ job.company }} • {{ job.location }}</div>
+                <div class="job-info">
+                    <h3>{{ job.title }}</h3>
+                    <p>{{ job.company }} • {{ job.location }}</p>
+                    <p>💰 {{ job.salary }}</p>
+                    <p>📅 Last Date: {{ job.last_date }}</p>
 
-        <div class="badge">{{ job.category }}</div>
-        <div class="badge">💰 {{ job.salary }}</div>
-
-        <div class="deadline">
-            ⏳ Last Date: {{ job.last_date }}
+                    {% if applied %}
+                        <div class="disabled">
+                            Already Applied This Month
+                        </div>
+                    {% else %}
+                        <a href="/apply/{{ job.id }}" class="apply-btn">Apply Now</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-       {% if session.get('applied_success') %}
-    <div style="background: #d4edda; padding: 15px; border-radius: 10px; color: #155724; margin-bottom: 20px; text-align:center;">
-        ✅ Application submitted successfully!
-    </div>
-     {% endif %}
-        {% if applied %}
-    <div class="apply-btn disabled">
-        Already Applied This Month
-    </div>
-     {% else %}
-    <a href="/apply/{{ job.id }}" target="_self" class="apply-btn">
-        Apply Now
-    </a>
-       {% endif %}
-
-    </div>
     {% endfor %}
 
 </div>

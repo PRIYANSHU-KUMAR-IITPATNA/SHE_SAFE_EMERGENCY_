@@ -424,3 +424,18 @@ nav {
 .nav-row .dark {
     background: black;
 }
+/* JOB CARD MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .job-card {
+        flex-direction: column !important;
+    }
+}
+.job-card {
+    display: flex;
+    gap: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
