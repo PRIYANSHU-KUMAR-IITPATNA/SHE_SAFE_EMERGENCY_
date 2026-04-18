@@ -70,6 +70,35 @@ html {
     
 }
 
+.category-buttons {
+    width: min(100%, 860px);
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 18px;
+}
+
+.category-buttons .nav-btn {
+    display: block;
+    width: 100%;
+    padding: 20px 22px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--blue-color);
+    border-radius: 24px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.category-buttons .nav-btn:hover {
+    background: #5a42c4;
+    transform: translateY(-1px);
+}
+
 /*Header*/
 
 header {
