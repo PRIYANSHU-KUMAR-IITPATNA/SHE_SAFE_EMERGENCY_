@@ -9,7 +9,7 @@ from datetime import datetime
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'yoursecretkey'
+app.secret_key = os.urandom(24)
 
 # ------------------ TWILIO CONFIG ------------------
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
