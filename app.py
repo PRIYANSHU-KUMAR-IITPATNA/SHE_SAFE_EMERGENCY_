@@ -194,17 +194,48 @@ def test_jobs():
     data = load_jobs()
     return data
 #-----------jobs admin panel --------------------------------
+from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import flash
+
+# ---- LOGIN REQUIRED DECORATOR ----
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "admin_logged_in" in session:
+            return f(*args, **kwargs)
+
+        if request.args.get("key") == "12345":
+            session["admin_logged_in"] = True
+            return f(*args, **kwargs)
+
+        return redirect(url_for("admin_login"))
+    return decorated_function
+
+
+# ---- ADMIN LOGIN ----
+ADMIN_USERNAME = "jobadmin"
+ADMIN_PASSWORD_HASH = generate_password_hash("admin123")
+
+@app.route("/jobs_admin_login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == ADMIN_USERNAME and check_password_hash(ADMIN_PASSWORD_HASH, password):
+            session["admin_logged_in"] = True
+            return redirect(url_for("admin"))
+        else:
+            flash("Invalid credentials")
+
+    return render_template("login.html", action=url_for("admin_login"))
+
 @app.route('/admin')
+@login_required
 def admin():
-    key = request.args.get('key')
-
-    # simple security
-    if key != "12345":
-        return "Unauthorized Access ❌"
-
     data = load_jobs()
     return render_template('admin.html', jobs=data["jobs"])
-
 #----------------------add jobs -------------------------------
 def extract_video_id(link):
     if not link:
