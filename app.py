@@ -9,7 +9,7 @@ from datetime import datetime
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'yoursecretkey'
+app.secret_key = os.urandom(24)
 
 # ------------------ TWILIO CONFIG ------------------
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -30,6 +30,19 @@ def save_users(users):
     with open('users.json', 'w') as file:
         json.dump(users, file, indent=4)
 
+# ---------------- JOB DATABASE ----------------
+
+def load_jobs():
+    if not os.path.exists("jobs.json"):
+        return {"jobs": []}
+    
+    with open("jobs.json", "r") as f:
+        return json.load(f)
+
+
+def save_jobs(data):
+    with open("jobs.json", "w") as f:
+        json.dump(data, f, indent=4)
 # ------------------ ALERT DATABASE ------------------
 def load_alerts():
     try:
@@ -49,7 +62,6 @@ def home():
     if not session.get("user"):
         return redirect(url_for('login'))
     return render_template('index.html')
-
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -130,6 +142,198 @@ def terms():
 def buddy():
     return render_template('buddy.html')
 
+from datetime import datetime, timedelta
+#--------------------jobs------------------------------------------
+from datetime import datetime
+
+@app.route('/jobs')
+def jobs():
+    jobs = load_jobs()
+
+    current_month = datetime.now().strftime("%Y-%m")
+    applied = False
+
+    if 'applied_month' in session:
+        if session['applied_month'] == current_month:
+            applied = True
+        else:
+            session.pop('applied_month')  # reset automatically
+
+    success = session.pop('applied_success', False)
+
+    return render_template(
+        'jobs.html',
+        jobs=jobs,
+        applied=applied,
+        success=success
+    )
+#------------------------apply int jobs----------------------------
+@app.route('/apply/<int:job_id>')
+def apply(job_id):
+    from datetime import datetime
+
+    jobs = load_jobs()
+
+    selected_job = None
+    for job in jobs['jobs']:
+        if job['id'] == job_id:
+            selected_job = job
+            break
+
+    if not selected_job:
+        return "Job not found"
+
+    # ✅ STORE MONTH INSTEAD OF DATE
+    session['applied_month'] = datetime.now().strftime("%Y-%m")
+    session['applied_success'] = True
+
+    return redirect(selected_job['apply_link'])
+#----------------------test jobs--------------------------------
+@app.route('/test_jobs')
+def test_jobs():
+    data = load_jobs()
+    return data
+#-----------jobs admin panel --------------------------------
+from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import flash
+
+# ---- LOGIN REQUIRED DECORATOR ----
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "admin_logged_in" in session:
+            return f(*args, **kwargs)
+
+        if request.args.get("key") == "12345":
+            session["admin_logged_in"] = True
+            return f(*args, **kwargs)
+
+        return redirect(url_for("admin_login"))
+    return decorated_function
+
+
+# ---- ADMIN LOGIN ----
+ADMIN_USERNAME = "jobadmin"
+ADMIN_PASSWORD_HASH = generate_password_hash("admin123")
+
+@app.route("/jobs_admin_login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == ADMIN_USERNAME and check_password_hash(ADMIN_PASSWORD_HASH, password):
+            session["admin_logged_in"] = True
+            return redirect(url_for("admin"))
+        else:
+            flash("Invalid credentials")
+
+    return render_template("login.html", action=url_for("admin_login"))
+
+@app.route('/admin')
+@login_required
+def admin():
+    data = load_jobs()
+    return render_template('admin.html', jobs=data["jobs"])
+#----------------------add jobs -------------------------------
+def extract_video_id(link):
+    if not link:
+        return None
+
+    # Normal YouTube link
+    if "watch?v=" in link:
+        return link.split("watch?v=")[1].split("&")[0]
+
+    # Short link
+    if "youtu.be/" in link:
+        return link.split("youtu.be/")[1].split("?")[0]
+
+    # Embed link
+    if "embed/" in link:
+        return link.split("embed/")[1].split("?")[0]
+
+    # ✅ Shorts link (NEW FIX)
+    if "shorts/" in link:
+        return link.split("shorts/")[1].split("?")[0]
+
+    return None
+@app.route('/add_job', methods=['POST'])
+def add_job():
+    data = load_jobs()
+
+    video_link = request.form['video_link']
+    video_id = extract_video_id(video_link)
+
+    new_job = {
+        "id": len(data["jobs"]) + 1,
+        "title": request.form['title'],
+        "company": request.form['company'],
+        "location": request.form['location'],
+        "salary": request.form['salary'],
+        "category": request.form['category'],
+        "apply_link": request.form['apply_link'],
+        "last_date": request.form['last_date'],
+        "video_link": video_link,
+        "video_id": video_id,
+        "verified": True
+    }
+
+    data["jobs"].append(new_job)
+    save_jobs(data)
+
+    return redirect('/admin?key=12345')
+#-------------------delete jobs------------------------------
+@app.route('/delete_job/<int:job_id>')
+def delete_job(job_id):
+    data = load_jobs()
+
+    data["jobs"] = [job for job in data["jobs"] if job["id"] != job_id]
+
+    save_jobs(data)
+
+    return redirect('/admin?key=12345')
+#------------------edit jobs---------------------------------------
+@app.route('/edit_job/<int:job_id>')
+def edit_job(job_id):
+    data = load_jobs()
+
+    selected_job = None
+    for job in data['jobs']:
+        if job['id'] == job_id:
+            selected_job = job
+            break
+
+    if not selected_job:
+        return "Job not found"
+
+    return render_template('edit_job.html', job=selected_job)
+#---------------update jobs ---------------------------------------
+@app.route('/update_job/<int:job_id>', methods=['POST'])
+def update_job(job_id):
+    data = load_jobs()
+
+    for job in data['jobs']:
+        if job['id'] == job_id:
+            job['title'] = request.form['title']
+            job['company'] = request.form['company']
+            job['location'] = request.form['location']
+            job['salary'] = request.form['salary']
+            job['category'] = request.form['category']
+            job['apply_link'] = request.form['apply_link']
+            job['last_date'] = request.form['last_date']
+
+            # convert video link again
+            video_link = request.form['video_link']
+            video_id = extract_video_id(video_link)
+
+            job['video_link'] = video_link
+            job['video_id'] = video_id
+            break
+
+    save_jobs(data)
+
+    return redirect('/admin?key=12345')
 # ------------------ TWILIO SOS ------------------
 @app.route('/twilio', methods=['GET', 'POST'])
 def twilio_page():
@@ -187,7 +391,43 @@ def alerts():
 
     data = load_alerts()
     return render_template("alerts.html", alerts=data)
+    
+@app.route('/file_case')
+def file_case():
+    return render_template('file_case.html')
 
+@app.route('/food_store')
+def food_store():
+    return render_template('food_store.html')
+
+
+@app.route('/healthcare')
+def healthcare():
+    return render_template('healthcare.html')
+
+@app.route('/eduvid')
+def eduvid():
+    return render_template('eduvid.html')
+# ------------------------------------Profile --------------------------------------------
+@app.route('/profile')
+def profile():
+    if not session.get("user"):
+        return redirect(url_for("login"))
+
+    users = load_users()
+    username = session.get("user")
+
+    user_data = users.get(username, {})
+
+    return render_template("profile.html", user=user_data)
+    # Load users.json
+    import json
+    with open("users.json") as f:
+        users = json.load(f)
+
+    user_data = users.get(username, {})
+
+    return render_template("profile.html", user=user_data)
 # ------------------ SCHEME EXPLORER ------------------
 @app.route('/explore', methods=['GET', 'POST'])
 def explore():
@@ -229,6 +469,7 @@ def explore():
             eligible.append(scheme)
 
     return render_template('explore.html', eligible=eligible)
+
 
 # ------------------ RUN SERVER ------------------
 if __name__ == '__main__':

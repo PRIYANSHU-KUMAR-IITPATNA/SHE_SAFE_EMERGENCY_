@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Job</title>
+</head>
+<body>
+
+<h1>Edit Job</h1>
+
+<form method="POST" action="/update_job/{{ job.id }}">
+
+    <input type="text" name="title" value="{{ job.title }}"><br><br>
+    <input type="text" name="company" value="{{ job.company }}"><br><br>
+    <input type="text" name="location" value="{{ job.location }}"><br><br>
+    <input type="text" name="salary" value="{{ job.salary }}"><br><br>
+
+    <input type="text" name="category" value="{{ job.category }}"><br><br>
+
+    <input type="text" name="apply_link" value="{{ job.apply_link }}"><br><br>
+
+    <input type="date" name="last_date" value="{{ job.last_date }}"><br><br>
+
+    <input type="text" name="video_link" value="{{ job.video_link }}"><br><br>
+
+    <button type="submit">Update Job</button>
+
+</form>
+
+</body>
+</html>

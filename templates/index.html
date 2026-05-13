@@ -28,53 +28,40 @@
     <header>
 <div class="wrapper">
    <div class="she-safe">
-  <img src="{{ url_for('static', filename='images/She safe logo[1] copy 2.png')}}" alt="She Safe Logo" style="width: 120px; height: auto; position: absolute; top: 20px; left: 20px; z-index: 10;">
+  <img src="{{ url_for('static', filename='images/She safe logo[1] copy 2.png')}}" alt="She Safe Logo" style="width: 120px; height: auto; position: absolute; top: calc(20px + 2.5cm); left: 20px; z-index: 10;">
 </div>
     
-     <nav >
-        
-        <ul style="margin-top: 80px;">
-          
+     <nav>
 
-            <li>
-                <a href="{{ url_for('product')}}" class="btn white" >Products</a>
-            </li>
+    <!-- 🔹 ROW 1 (MAIN BUTTONS) -->
+    <div class="nav-row top-row">
+        <a href="{{ url_for('profile') }}" class="btn">Profile</a>
+        <a href="{{ url_for('login') }}" class="btn">Sign In</a>
+        <a href="{{ url_for('register') }}" class="btn dark">Register</a>
 
-            <li>
-                <a href="{{ url_for('solutions')}}">Solutions</a>
-            </li>
+        <a href="{{ url_for('file_case') }}" class="btn">File Complaint & Case</a>
+        <a href="{{ url_for('food_store') }}" class="btn">Food Store</a>
+        <a href="{{ url_for('jobs') }}" class="btn">Internship & Job</a>
+        <a href="{{ url_for('healthcare') }}" class="btn">Free Healthcare</a>
+        <a href="{{ url_for('eduvid') }}" class="btn">EduVid</a>
+    </div>
 
-            <li>
-                <a href="{{ url_for('community')}}">Community</a>
-            </li>
+    <!-- 🔹 ROW 2 (OLD LINKS) -->
+    <div class="nav-row bottom-row">
+        <a href="{{ url_for('product') }}">Products</a>
+        <a href="{{ url_for('solutions') }}">Solutions</a>
+        <a href="{{ url_for('community') }}">Community</a>
+        <a href="{{ url_for('resources') }}">Resources</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('twilio_page') }}">Link</a>
+    </div>
 
-            <li>
-                <a href="{{ url_for('resources')}}">Resources</a>
-            </li>
-
-            <li>
-                <a href="{{ url_for('contact')}}">Contact</a>
-            </li>
-
-            <li>
-                <a href="{{ url_for('twilio_page')}}">Link</a>
-            </li>
-
-            <li>
-                <a href="{{ url_for('login')}}" target="_blank" class="btn white">Sign In</a>
-            </li>
-
-            <li>
-                <a href="{{ url_for('register')}}" class="btn dark">Register</a>
-            </li>
-            
-        </ul>
-    </nav>
+</nav>
     <!--End of navigation menu-->
 
     <div class="hero-section">
         <div class="left">
-            <h1 class="text-up">"Break the Silence, End the Violence"<br>
+            <h1 class="text-up">"Empowered women, End the Violence"<br>
                 "Safe Women, Strong Nation."</h1>
 
                 <a href="{{ url_for('explore')}}" class="btn white">explore</a>

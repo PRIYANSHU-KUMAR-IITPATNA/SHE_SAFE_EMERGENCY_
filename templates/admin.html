@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<h1>Admin Panel - Manage Jobs</h1>
+
+<h2>Add New Job</h2>
+
+<form method="POST" action="/add_job">
+    <input type="text" name="title" placeholder="Job Title" required><br><br>
+    <input type="text" name="company" placeholder="Company" required><br><br>
+    <input type="text" name="location" placeholder="Location" required><br><br>
+    <input type="text" name="salary" placeholder="Salary" required><br><br>
+
+    <input type="text" name="category" placeholder="Category" required><br><br>
+
+    <input type="text" name="apply_link" placeholder="Google Form Link" required><br><br>
+    <input type="text" name="video_link" placeholder="YouTube Link"><br><br>
+    <input type="date" name="last_date" required><br><br>
+
+    <button type="submit">Add Job</button>
+</form>
+
+<hr>
+
+<h2>Existing Jobs</h2>
+
+{% for job in jobs %}
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+        <b>{{ job.title }}</b> ({{ job.company }})<br>
+
+        <a href="/delete_job/{{ job.id }}">❌ Delete</a>
+        <br>
+        <a href="/edit_job/{{ job.id }}">✏️ Edit</a>
+    </div>
+{% endfor %}
+
+</body>
+</html>

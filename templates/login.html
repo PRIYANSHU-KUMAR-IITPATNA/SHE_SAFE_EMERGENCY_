@@ -17,7 +17,13 @@
 
         <div class="form-box login">
             <h2 class="animation" style="--i:0; --j:21;">Login</h2>
-            <form method="POST" action="/login">
+            <form method="POST" action="{{ action if action else url_for('login') }}">
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-message">{{ messages[0] }}</div>
+                    {% endif %}
+                {% endwith %}
 
                 <div class="input-box animation" style="--i:1; --j:22;">
                    <input type="text" name="username" required>
